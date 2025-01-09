@@ -1,0 +1,125 @@
+
+blockquote {
+	font-family: Times, serif;
+	font-size: 12pt;
+	margin-top: .1in;
+	margin-bottom: .1in;
+	margin-left: .25in;
+	text-indent: .25in;
+	background-color: lightgrey;
+	border: 1px solid gray;
+	padding: 10px;
+}
+
+p, ul, p.western {
+	font-family: Times, serif;
+	font-size: 12pt;
+	margin-top: 0in;
+	margin-bottom: 0.1in;
+}
+
+div.body {
+	column-count: 2;
+	column-gap: 0.25in;
+	margin-top: 0.25in;
+}
+
+body {
+	background-color:#faf8f6;
+}
+
+h1 {
+	text-align: center;
+	margin-top: .25in;
+	margin-bottom: 0in;
+	font-family: Anton, sans-serif;
+	text-transform: uppercase;
+	font-size: 24pt;
+	font-weight: normal;
+	text-indent: 0in;
+	margin-left: 0in;
+	page-break-after: avoid;
+}
+
+h2 {
+	margin-top: 0in;
+	margin-bottom: 0in;
+	font-family: Anton, sans-serif;
+	text-transform: uppercase;
+	font-size: 18pt;
+	font-weight: normal;
+	text-indent: 0in;
+	margin-left: 0in;
+	page-break-after: avoid;
+}
+
+h3 {
+	margin-top: 0in;
+	margin-bottom: 0in;
+	font-family: Anton, sans-serif;
+	text-transform: uppercase;
+	font-size: 16pt;
+	font-weight: normal;
+	text-indent: 0in;
+	margin-left: 0in;
+	page-break-after: avoid;
+}
+
+h4 {
+	margin-bottom: 0in;
+	font-family: Times, serif;
+	text-transform: uppercase;
+	font-size: 12pt;
+	font-weight: bold;
+	text-indent: 0in;
+	margin-left: 0in;
+	page-break-after: avoid;
+}
+
+h5 {
+	margin-bottom: 0in;
+	font-family: Times, serif;
+	text-transform: uppercase;
+	font-size: 12pt;
+	font-weight: bold;
+	text-indent: 0in;
+	margin-left: 0in;
+	page-break-after: avoid;
+}
+
+hr { 
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: 0;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 0;
+  height: 3px;
+  color: darkred;
+  background-color: darkred;
+  width: 300px;
+  text-align: left;
+}
+
+td, th {
+	font-family: Times, serif;
+	text-align: center;
+	font-size: 12pt;
+	margin-top: 0in;
+	margin-bottom: 0in;
+	text-indent: 0in;
+}
+
+th {
+	font-weight: bold;
+}
+
+li {
+	margin: 0;
+	font-family: Times, serif;
+	font-size: 12pt;
+	text-indent: 0;
+	padding-left: 0;
+}
+

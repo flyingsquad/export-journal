@@ -45,8 +45,13 @@ export class ExportJournal {
 		let cssSection = await response.text();
 
 		let pages = "";
-		for (var page of journal.pages) {
-			pages += `<div class="title"><h1>` + htmlEntities(page.name) + `</h1></div>`;
+		let pp = journal.pages.filter(() => true);
+		
+		pp.sort((a, b) => a.sort - b.sort);
+
+		for (var page of pp) {
+			if (page.title.show)
+				pages += `<div class="title"><h1>` + htmlEntities(page.name) + `</h1></div>`;
 			pages += `<div class="body">`;
 			pages += page.text.content;
 			pages += `</div>`;

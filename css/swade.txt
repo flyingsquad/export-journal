@@ -22,6 +22,8 @@ div.body {
 	column-count: 2;
 	column-gap: 0.25in;
 	margin-top: 0.25in;
+	border-bottom: solid gray 1pt;
+	padding-bottom: 0.25in;
 }
 
 body {

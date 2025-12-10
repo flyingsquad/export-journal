@@ -1,0 +1,198 @@
+/* Custom CSS */
+/*
+   BODYDIV=body
+   PAGEDIV=
+   TITLEDIV=
+*/
+
+@font-face {
+  font-family: 'Creepster';
+  src: url('./fonts/Creepster-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Bookman Old Style';
+  src: url('./fonts/Bookos.ttf') format('truetype');
+}
+.creepster { font-family: Creepster; }
+
+.img { border: 0px; width: 200px; }
+.charportrait { display: block; margin-left: auto; margin-right: auto; width: 200px; border: 0px; }
+
+.twocol { column-count:2; column-gap:0.25in }
+
+.threecol { column-count:3; column-gap:0.25in }
+
+.body {
+	font-family: "Times";
+	text-align: justify;
+	hyphens: auto;
+	font-size: 13pt;
+	text-indent: .2in;
+	margin: 0 0 0 0;
+}
+
+.bodycs {
+	font-family: "Bookman Old Style";
+	text-align: justify;
+	font-size: 12pt;
+	hyphens: auto;
+	text-indent: .2in;
+	margin: 0 0 0 0;
+}
+
+.line {
+	border-top: 1px solid black;
+	margin-left: 1in;
+	margin-right: 1in;
+}
+
+.blackline {
+	border-top: 1px solid black;
+}
+
+.lucida {
+	font-family: "Lucida Handwriting";
+	font-size: 14pt;
+	margin-top: 14pt;
+}
+
+
+blockquote {
+	border-left: none;
+}
+
+p, ul, p.western {
+	font-family: "Bookman Old Style", serif;
+	font-size: 12pt;
+	margin-top: 0in;
+	margin-bottom: 0.1in;
+}
+
+p {
+	text-indent: 0in;
+}
+
+div.body {
+	column-count: 2;
+	column-gap: 0.25in;
+	margin-top: 0.25in;
+	border-bottom: solid gray 1pt;
+	padding-bottom: 0.25in;
+}
+
+div.title {
+	column-count: 1;
+}
+
+body {
+	background-color:#faf8f6;
+}
+
+h1, p.h1 {
+	text-align: center;
+	margin-top: .25in;
+	margin-bottom: 0in;
+	font-family: Creepster, serif;
+	font-size: 24pt;
+	font-weight: normal;
+	text-indent: 0in;
+	margin-left: 0in;
+	page-break-after: avoid;
+}
+
+h1.docheader {
+	margin-top: 2in;
+	margin-bottom: 0in;
+	font-family: Creepster, serif;
+	font-size: 36pt;
+	font-weight: normal;
+	text-indent: 0in;
+	margin-left: 0in;
+	text-align: center;
+	page-break-after: avoid;
+	break-before: page;
+}
+
+h1.title {
+	margin-top: .1in;
+	margin-bottom: 0in;
+	font-family: Creepster, serif;
+	font-size: 24pt;
+	font-weight: normal;
+	text-indent: 0in;
+	margin-left: 0in;
+	text-align: center;
+	page-break-after: avoid;
+	break-before: page;
+}
+
+h2, p.h2 {
+	margin-top: .1in;
+	margin-bottom: 0in;
+	font-family: Creepster, serif;
+	font-size: 18pt;
+	font-weight: normal;
+	text-indent: 0in;
+	margin-left: 0in;
+	page-break-after: avoid;
+}
+
+h3, p.h3 {
+	margin-top: .1in;
+	margin-bottom: 0in;
+	font-family: Creepster, serif;
+	font-size: 16pt;
+	font-weight: normal;
+	text-indent: 0in;
+	margin-left: 0in;
+	page-break-after: avoid;
+}
+
+h4, p.h4 {
+	margin-top: .1in;
+	margin-bottom: 0in;
+	font-family: "Bookman Old Style", serif;
+	text-transform: uppercase;
+	font-size: 12pt;
+	font-weight: bold;
+	text-indent: 0in;
+	margin-left: 0in;
+	page-break-after: avoid;
+}
+
+h5, p.h5 {
+	margin-top: .1in;
+	margin-bottom: 0in;
+	font-family: "Bookman Old Style", serif;
+	text-transform: uppercase;
+	font-size: 12pt;
+	font-weight: bold;
+	text-indent: 0in;
+	margin-left: 0in;
+	page-break-after: avoid;
+}
+
+td, th {
+	font-family: "Bookman Old Style", serif;
+	text-align: center;
+	font-size: 12pt;
+	margin-top: 0in;
+	margin-bottom: 0in;
+	text-indent: 0in;
+}
+
+th {
+	font-weight: bold;
+}
+
+li {
+	margin: 0;
+	font-family: "Bookman Old Style", serif;
+	font-size: 12pt;
+	text-indent: 0in;
+	padding-left: 0in;
+}
+
+.itemdata {
+	text-indent: .25in;
+}

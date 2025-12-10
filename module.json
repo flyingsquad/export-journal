@@ -1,7 +1,7 @@
 {
   "id": "export-journal",
-  "title": "Export Journal",
-  "description": "Export a journal to an HTML file.",
+  "title": "Export to HTML",
+  "description": "Export foundry data to an HTML file.",
   "authors": [
     {
 		"name": "flying-squad"
@@ -9,11 +9,11 @@
   ],
   "compatibility": {
     "minimum": "11",
-    "verified": "12"
+    "verified": "13"
   },
   "esmodules": ["export.js"],
   "url": "https://github.com/flyingsquad/export-journal",
   "manifest": "https://raw.githubusercontent.com/flyingsquad/export-journal/main/module.json",
-  "version": "1.0.0",
-  "download": "https://github.com/flyingsquad/export-journal/archive/refs/tags/v1.0.0.zip"
+  "version": "1.0.1",
+  "download": "https://github.com/flyingsquad/export-journal/archive/refs/tags/v1.0.1.zip"
 }

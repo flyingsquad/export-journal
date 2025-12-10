@@ -1,3 +1,324 @@
+/* Custom CSS */
+@font-face {
+  font-family: 'Algerian';
+  src: url('./fonts/Alger.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Allura";
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Allura.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Architect";
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/architect.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Baskerville';
+  src: url('./fonts/BASKVILL.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Black Letter';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Blackletter.TTF') format('truetype');
+}
+@font-face {
+  font-family: 'Bookman Old Style';
+  src: url('./fonts/Bookos.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Brush Script';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/BRUSHSCI.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Cinzel';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Cinzel-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Dancing';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/DancingScript.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Fell Small Caps';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/SmallCaps.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Garamond';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Garamond.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Great Vibes';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/GreatVibes.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Handwriting';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/HomemadeApple.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Howard';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Howard.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Lucida Handwriting';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/LHANDW.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Mistral';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/MISTRAL.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Niconne';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Niconne.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Old English';
+  src: url('./fonts/OLDENGL.TTF') format('truetype');
+}
+@font-face {
+  font-family: 'Parisienne';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Parisienne.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rage';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Rage.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rouge';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Rouge.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rye';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Rye.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Sacramento';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Sacramento.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Typewriter';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Typewriter.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Vladimir';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/Vladimir.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Windsor';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/WindsorLight.TTF') format('truetype');
+}
+@font-face {
+  font-family: 'Techno';
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/techno-bold.ttf') format('truetype');
+}
+
+.newspaper {
+	background-color: white; padding:.25in
+}
+.img { border: 0px }
+.charportrait { display: block; margin-left: auto; margin-right: auto; width: 200px; border: 0px; }
+
+.dateline {
+	border-top: 1pt solid #000000;
+	border-bottom: 1pt solid #000000;
+	padding-bottom: 2pt;
+	padding-top: 4pt;
+	font-family: "Times";
+	font-size: 9pt;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.headline {
+	font-family: "Windsor";
+	font-size: 16pt;
+	font-weight: bold;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.headline2 {
+	font-family: "Windsor";
+	font-size: 14pt;
+	font-style: italic;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.headlineb1 {
+	font-family: "Baskerville";
+	font-size: 16pt;
+	font-weight: bold;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.headlineb2 {
+	font-family: "Baskerville";
+	font-size: 14pt;
+	font-style: italic;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.twocol { column-count:2; column-gap:0.25in }
+
+.threecol { column-count:3; column-gap:0.25in }
+
+.body {
+	font-family: "Times";
+	text-align: justify;
+	hyphens: auto;
+	font-size: 13pt;
+	text-indent: .2in;
+	margin: 0 0 0 0;
+}
+
+.ad {
+	font-family: "Times";
+	initial-letter: 2;
+	text-align: justify;
+	font-size: 13pt;
+	margin: 0 0 0 0;
+}
+
+.headlinea1 {
+	font-family: "Algerian";
+	font-size: 18pt;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.headlinea2 {
+	font-family: "Algerian";
+	font-size: 16pt;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.headlinec1 {
+	font-family: "Cinzel";
+	font-size: 18pt;
+	text-align: center;
+}
+
+.headoe {
+	font-family: "Old English";
+	font-size: 18pt;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.masthead {
+	font-family: "Old English";
+	font-size: 64pt;
+	text-align: center;
+	margin: 0 0 0 0;
+}
+
+.headtimes {
+	font-family: "Times";
+	font-weight: bold;
+	font-size: 16pt;
+	text-align: center;
+	text-transform: uppercase;
+	margin: 0 0 0 0;
+}
+
+.bodycs {
+	font-family: "Bookman Old Style";
+	text-align: justify;
+	font-size: 12pt;
+	hyphens: auto;
+	text-indent: .2in;
+	margin: 0 0 0 0;
+}
+
+.line {
+	border-top: 1px solid black;
+	margin-left: 1in;
+	margin-right: 1in;
+}
+
+.blackline {
+	border-top: 1px solid black;
+}
+
+.lucida {
+	font-family: "Lucida Handwriting";
+	font-size: 14pt;
+	margin-top: 14pt;
+}
+.allura { font-family: Allura; font-size: 22pt;}
+.architect { font-family: Architect; font-size: 18pt; font-weight: bold;}
+.blackletter { font-family: "Black Letter"; font-size: 22pt;}
+.brush { font-family: "Brush Script"; font-size: 22pt;}
+.dancing { font-family: "Dancing"; font-size: 20pt;}
+.mistral { font-family: Mistral; font-size: 22pt;}
+.garamond { font-family: Garamond; font-size: 13pt; }
+.greatvibes { font-family: "Great Vibes"; font-size: 20pt; margin-left: 20px;}
+.handwriting { font-family: "Handwriting"; font-size: 16pt;}
+.howard { font-family: "Howard"; font-size: 20pt;}
+.lhand {font-family: "Lucida Handwriting";}
+.niconne { font-family: Niconne; font-size: 22pt; }
+.parisienne { font-family: Parisienne; font-size: 20pt; }
+.rage { font-family: Rage; font-size: 22pt; }
+.rouge { font-family: Rouge; font-size: 22pt; margin-left: 20px;}
+.rye { font-family: Rye; font-size: 20pt;}
+.sacramento { font-family: Sacramento; font-size: 20pt; }
+.scfell { font-family: "Fell Small Caps"; font-size: 20pt; }
+.techno { font-family: "Techno"; font-size: 20pt; }
+.typewriter { font-family: Typewriter; font-size: 13pt; line-height:150%; margin-top: 13pt;}
+.vladimir { font-family: "Vladimir"; font-size: 22pt;}
+
+.newsimg {
+	display: block; margin-left: auto; margin-right: auto; width: 75%; margin-top: 10px; margin-bottom: 10px; border-width: 0px
+}
+
+.telegram {
+  background-image: url("https://blk-aws.s3.us-east-2.amazonaws.com/images/LoEG/telegram-blank.jpg");
+  position: relative;
+  width: 770px;
+  height: 572px;
+  border: 1px solid #000000;
+} 
+
+.tofld {
+  position: absolute;
+  font-size: 18pt;
+  left: 129px;
+  top: 270px;
+  width: 636px;
+  height: 100px;
+}
+.officefld {
+  position: absolute;
+  font-size: 18pt;
+  left: 33px;
+  top: 180px;
+  width: 400px;
+  height: 100px;
+}
+.msgfld {
+  position: absolute;
+  font-size: 18pt;
+  left: 30px;
+  top: 310px;
+  width: 715px;
+  height: 250px;
+}
+.time1fld {
+  position: absolute; font-size: 18pt;
+  left: 484px; top: 210px;
+  width: 100px; height: 20px;
+}
+.time2fld {
+  position: absolute; font-size: 18pt;
+  left: 659px; top: 210px;
+  width: 100px; height: 20px;
+}
+
+blockquote {
+	border-left: none;
+}
+
+
 blockquote {
 	font-family: "Bookman Old Style", serif;
 	font-size: 12pt;
@@ -17,10 +338,17 @@ p, ul, p.western {
 	margin-bottom: 0.1in;
 }
 
+p {
+	text-indent: .2in;
+}
+
+
 div.body {
 	column-count: 2;
 	column-gap: 0.25in;
 	margin-top: 0.25in;
+	border-bottom: solid gray 1pt;
+	padding-bottom: 0.25in;
 }
 
 body {

@@ -90,8 +90,21 @@ export class ExportSwade extends ExportSys {
 				this.write(this.ej.doReplacements(item.system.description));
 			if (item.system?.grants?.length > 0) {
 				let grants = [];
-				for (let g of item.system.grants)
-					grants.push(g.name);
+				for (let g of item.system.grants) {
+					if (g.name)
+						grants.push(g.name);
+					else {
+						let uuidParts = g.uuid.split('.');
+						if (uuidParts.length == 5 && uuidParts[0] == 'Compendium') {
+							const pack = game.packs.get(uuidParts[1] + '.' + uuidParts[2]);
+							if (pack) {
+								const item = pack.index.get(uuidParts[4]);
+								if (item)
+									grants.push(item.name);
+							}
+						}
+					}
+				}
 				
 				grants.sort(function(a, b) {
 					return a.localeCompare(b);

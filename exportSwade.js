@@ -34,6 +34,20 @@ export class ExportSwade extends ExportSys {
 			this.write(`<${header} id="${item._id}">` + this.ej.htmlEntities(item.name) + `</${header}>\n`);
 		switch (item.type) {
 		default:
+			if (item.type == 'hindrance') {
+				switch (item.system.severity) {
+				case 'major':
+					this.write(`<p style="font-weight: bold">Major Hindrance</p>\n`);
+					break;
+				case 'minor':
+					this.write(`<p style="font-weight: bold">Minor Hindrance</p>\n`);
+					break;
+				case 'either':
+					this.write(`<p style="font-weight: bold">Major or Minor Hindrance</p>\n`);
+					break;
+				}
+			}
+
 			if (item.system.requirements && item.system.requirements.length > 0) {
 				this.write(`<p><b>Requirements:</b> `);
 				let str = '';

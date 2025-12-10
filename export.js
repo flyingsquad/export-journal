@@ -554,7 +554,7 @@ async function procFolder(ej, folder, depth) {
 		if (entry instanceof JournalEntry)
 			await ej.writePages(entry, depth+1);
 		else if (entry instanceof Item)
-			await ej.writeItem(entry);
+			await ej.writeItem(entry, depth+1);
 		else if (entry instanceof Actor)
 			await ej.exportActor(entry, depth+1)
 		else if (entry instanceof RollTable)

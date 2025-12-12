@@ -16,6 +16,7 @@ export class ExportSwade extends ExportSys {
 	}
 
 	systemFields = [
+		['price', 'Price'],
 		['armor', 'Armor'],
 		['damage', 'Damage'],
 		['rank', 'Rank'],
@@ -25,8 +26,55 @@ export class ExportSwade extends ExportSys {
 		['parry', 'Parry'],
 		['pp', 'Power Points'],
 		['duration', 'Duration'],
-		['arcane', 'Arcane']
+		['arcane', 'Arcane'],
+		['weight', 'Weight']
 	];
+
+	listItems(ej, actor, type, category) {
+		let items = [];
+		for (let item of actor.items)
+			if (item.type === type)
+				items.push(item);
+
+		if (items.length > 0) {
+			items.sort(function(a, b) {
+				return a.name.localeCompare(b.name);
+			});
+			let str = '';
+			for (let i = 0; i < items.length; i++) {
+				let it = items[i];
+				if (str)
+					str += '; ';
+				str += ej.htmlEntities(it.name);
+				if (it.system.quantity && it.system.quantity > 1) {
+					str += ` (x${it.system.quantity})`;
+				}
+				if (type == 'skill')
+					str += ' ' + this.showDie(it.system.die);
+				else if (type == 'weapon' || type == 'power' || type == 'armor' || type == 'consumable' || type == 'gear') {
+					let data = '';
+					for (let  j = 0; j < this.systemFields.length; j++) {
+						const elt = this.systemFields[j];
+						if (it.system && it.system[elt[0]]) {
+							if (data)
+								data += '; ';
+							data += `${elt[1]}: ${it.system[elt[0]]}`;
+						}
+					}
+					if (type == 'power' && it.system.trapping) {
+						if (data)
+							data += '; ';
+						data += 'Trappings: ' + ej.htmlEntities(it.system.trapping);
+					}
+					if (data) {
+						const strength = this.showDie(actor.system.attributes.strength.die);
+						str += ' (' + data.replaceAll('@str', strength) + ')';
+					}
+				}
+			}
+			ej.write(`<p class="attributes"><b>${category}:</b> ` + str + `</p>\n`);
+		}
+	}
 
 	exportItem(item, depth) {
 		const header = `h${depth}`;
@@ -122,63 +170,17 @@ export class ExportSwade extends ExportSys {
 		}
 	}
 
+	showDie(die) {
+		let txt = 'd' + die.sides;
+		if (die.modifier > 0)
+			txt += '+' + die.modifier;
+		else if (die.modifier < 0)
+			txt += die.modifier;
+		return txt;
+	}
+
 	
 	exportActor(actor, depth) {
-		function showDie(die) {
-			let txt = 'd' + die.sides;
-			if (die.modifier > 0)
-				txt += '+' + die.modifier;
-			else if (die.modifier < 0)
-				txt += die.modifier;
-			return txt;
-		}
-		
-		function listItems(ej, actor, type, category) {
-			let items = [];
-			for (let item of actor.items)
-				if (item.type === type)
-					items.push(item);
-
-			if (items.length > 0) {
-				items.sort(function(a, b) {
-					return a.name.localeCompare(b.name);
-				});
-				let str = '';
-				for (let i = 0; i < items.length; i++) {
-					let it = items[i];
-					if (str)
-						str += '; ';
-					str += ej.htmlEntities(it.name);
-					if (it.system.quantity && it.system.quantity > 1) {
-						str += ` (x${it.system.quantity})`;
-					}
-					if (type == 'skill')
-						str += ' ' + showDie(it.system.die);
-					else if (type == 'weapon' || type == 'power' || type == 'armor') {
-						let data = '';
-						for (let  j = 0; j < ej.systemFields.length; j++) {
-							const elt = ej.systemFields[j];
-							if (it.system && it.system[elt[0]]) {
-								if (data)
-									data += '; ';
-								data += `${elt[1]}: ${it.system[elt[0]]}`;
-							}
-						}
-						if (type == 'power' && it.system.trapping) {
-							if (data)
-								data += '; ';
-							data += 'Trappings: ' + ej.htmlEntities(it.system.trapping);
-						}
-						if (data) {
-							const strength = showDie(actor.system.attributes.strength.die);
-							str += ' (' + data.replaceAll('@str', strength) + ')';
-						}
-					}
-				}
-				ej.write(`<p class="attributes"><b>${category}:</b> ` + str + `</p>\n`);
-			}
-		}
-
 		// This provides a method for putting system-dependent information
 		// in the actor name header.
 
@@ -199,9 +201,9 @@ export class ExportSwade extends ExportSys {
 			this.subsection('Notes', actor.system.details.notes, depth+1);
 		}
 		if (actor.type == 'npc' || actor.type == 'character') {
-			listItems(this.ej, actor, 'ancestry', 'Ancestry');
-			this.write(`<p class="attributes"><b>Attributes:</b> Agility ${showDie(actor.system.attributes.agility.die)}, Smarts ${showDie(actor.system.attributes.smarts.die)}, Spirit ${showDie(actor.system.attributes.spirit.die)}, Strength ${showDie(actor.system.attributes.strength.die)}, Vigor ${showDie(actor.system.attributes.vigor.die)}</p>\n`);
-			listItems(this.ej, actor, 'skill', 'Skills');
+			this.listItems(this.ej, actor, 'ancestry', 'Ancestry');
+			this.write(`<p class="attributes"><b>Attributes:</b> Agility ${this.showDie(actor.system.attributes.agility.die)}, Smarts ${this.showDie(actor.system.attributes.smarts.die)}, Spirit ${this.showDie(actor.system.attributes.spirit.die)}, Strength ${this.showDie(actor.system.attributes.strength.die)}, Vigor ${this.showDie(actor.system.attributes.vigor.die)}</p>\n`);
+			this.listItems(this.ej, actor, 'skill', 'Skills');
 			let stats = '<p class="attributes"><b>Pace:</b> ';
 			if (actor.system.pace.ground)
 				stats += actor.system.pace.ground;
@@ -217,15 +219,15 @@ export class ExportSwade extends ExportSys {
 				stats += `; <b>Size:</b> ${actor.system.stats.size}`;
 			stats += "</p>\n";
 			this.write(stats);
-			listItems(this.ej, actor, 'edge', 'Edges');
-			listItems(this.ej, actor, 'hindrance', 'Hindrances');
-			listItems(this.ej, actor, 'ability', 'Special Abilities');
-			listItems(this.ej, actor, 'power', 'Powers');
-			listItems(this.ej, actor, 'weapon', 'Weapons');
-			listItems(this.ej, actor, 'gear', 'Gear');
-			listItems(this.ej, actor, 'armor', 'Armor');
-			listItems(this.ej, actor, 'shield', 'Shield');
-			listItems(this.ej, actor, 'consumable', 'Consumables');
+			this.listItems(this.ej, actor, 'edge', 'Edges');
+			this.listItems(this.ej, actor, 'hindrance', 'Hindrances');
+			this.listItems(this.ej, actor, 'ability', 'Special Abilities');
+			this.listItems(this.ej, actor, 'power', 'Powers');
+			this.listItems(this.ej, actor, 'weapon', 'Weapons');
+			this.listItems(this.ej, actor, 'gear', 'Gear');
+			this.listItems(this.ej, actor, 'armor', 'Armor');
+			this.listItems(this.ej, actor, 'shield', 'Shield');
+			this.listItems(this.ej, actor, 'consumable', 'Consumables');
 		} else if (actor.type === 'group') {
 			if (actor.system.description)
 				this.subsection('Description', actor.system.description, depth+1);

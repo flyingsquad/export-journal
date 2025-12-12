@@ -230,11 +230,11 @@ export class ExportJournal {
 			let range = entry.range[0];
 			if (entry.range[0] != entry.range[1])
 				range += '-' + entry.range[1];
-			this.write(`<td style="width: 10%">${range}</td><td style="font-weight: bold; text-align: left;">${this.htmlEntities(entry.name)}</td>\n`);
+			this.write(`<td style="width: 20%">${range}</td><td style="font-weight: bold; text-align: left;">${this.htmlEntities(entry.name)}</td>\n`);
 			if (entry.description) {
 				this.write("</tr>\n");
 				this.write("<tr>\n");
-				this.write(`<td style="width: 10%"></td><td style="text-align: left;">${this.doReplacements(entry.description)}</td>\n`);
+				this.write(`<td style="width: 20%"></td><td style="text-align: left;">${this.doReplacements(entry.description)}</td>\n`);
 			}
 			this.write("</tr>\n");
 		}

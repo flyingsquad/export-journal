@@ -94,6 +94,8 @@ export class ExportSwade extends ExportSys {
 					this.write(`<p style="font-weight: bold">Major or Minor Hindrance</p>\n`);
 					break;
 				}
+			} else if (item.type == 'skill') {
+					this.write(`<p><b>Attribute:</b> ${item.system.attribute.replace(/^./, char => char.toUpperCase())}</p>\n`);
 			}
 
 			if (item.system.requirements && item.system.requirements.length > 0) {

@@ -296,7 +296,7 @@ export class ExportJournal {
 			}
 		}
 		
-		await this.compendiumFolders(pack.folders, documents, 1);
+		await this.compendiumFolders(pack.folders, documents, 2);
 
 		if (!isJournal) {
 			if (this.bodyDiv)
@@ -306,7 +306,7 @@ export class ExportJournal {
 	
 	async compendiumFolders(folders, docs, depth) {
 		for (const folder of folders) {
-			if (folder instanceof Folder && folder.depth != undefined && folder.depth == depth) {
+			if (folder instanceof Folder && folder.depth != undefined) {
 				if (depth > 1)
 					this.write(`<h${depth}>${this.htmlEntities(folder.name)}</h${depth}>\n`);
 				

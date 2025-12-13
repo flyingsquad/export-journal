@@ -7,8 +7,8 @@ import {ExportDnD5e} from "./exportDnD5e.js";
  
 export class ExportJournal {
 
-	createExporter(systemId) {
-		switch (systemId) {
+	createExporter() {
+		switch (game.system.id) {
 		case 'swade':
 			this.sysExporter = new ExportSwade(this);
 			break;
@@ -194,8 +194,8 @@ export class ExportJournal {
 	];
 
 	async writeItem(item, depth) {
-		if (this.sysExporter == null || this.sysExporter.systemId != item._stats.systemId) {
-			this.createExporter(item._stats.systemId);
+		if (this.sysExporter == null) {
+			this.createExporter();
 		}
 		this.sysExporter.exportItem(item, depth);
 	}
@@ -210,8 +210,8 @@ export class ExportJournal {
 	}
 	
 	async exportActor(actor, depth) {
-		if (this.sysExporter == null || this.sysExporter.systemId != actor._stats.systemId) {
-			this.createExporter(actor._stats.systemId);
+		if (this.sysExporter == null) {
+			this.createExporter();
 		}
 		
 		this.sysExporter.exportActor(actor, depth);

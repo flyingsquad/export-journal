@@ -106,8 +106,23 @@ export class ExportJournal {
 					return `<a href="#${search[2]}">${search[3]}</a>`;
 				}
 				return `<b>${search[3]}</b>`;
+			});	
+			// Handle SWADE @Embed by making a reference to the item.
+			content = content.replaceAll(/@Embed+\[([^\]]+)\]/g, function (x) {
+				let search = x.match(/\[(.+)\]/);
+				let ref = search[1].split('.');
+				const pack = game.packs.get(ref[1] + '.' + ref[2]);
+				let name;
+				const id = ref[ref.length -1];
+				if (pack) {
+					name = search[1];
+					const item = pack.index.get(id);
+					if (item)
+						name = item.name;
+				} else
+					name = x;
+				return `<a href="#${id}">${name}</a>`;
 			});			
-			//content = content.replaceAll(/@OpenCompendium\[[^\]]+\]{([^}]+)}/g, '<b>$1</b>');
 		}
 		return content;
 	}
@@ -287,6 +302,8 @@ export class ExportJournal {
 			entries.push(doc);
 
 		entries.sort(function(a, b) {
+			if (pack.sortingMode == 'm')
+				return a.sort - b.sort;
 			return a.name.localeCompare(b.name);
 		});
 		

@@ -10,7 +10,7 @@ export class ExportSwade extends ExportSys {
 		for (let  i = 0; i < arr.length; i++) {
 			const elt = arr[i];
 			if (item.system && item.system[elt[0]]) {
-				this.write(`<p class="itemdata">${elt[1]}: ${item.system[elt[0]]}</p>\n`);
+				this.writeItext(`<p class="itemdata">${elt[1]}: ${item.system[elt[0]]}</p>\n`);
 			}
 		}
 	}
@@ -76,7 +76,111 @@ export class ExportSwade extends ExportSys {
 		}
 	}
 
+	getItemText(item, depth) {
+		this.itemText = "";
+		const header = `h${depth}`;
+		if (item.name)
+			this.writeItext(`<${header} id="${item._id}">` + this.ej.htmlEntities(item.name) + `</${header}>\n`);
+
+		switch (item.type) {
+		default:
+			if (item.type == 'hindrance') {
+				switch (item.system.severity) {
+				case 'major':
+					this.writeItext(`<p style="font-weight: bold">Major Hindrance</p>\n`);
+					break;
+				case 'minor':
+					this.writeItext(`<p style="font-weight: bold">Minor Hindrance</p>\n`);
+					break;
+				case 'either':
+					this.writeItext(`<p style="font-weight: bold">Major or Minor Hindrance</p>\n`);
+					break;
+				}
+			} else if (item.type == 'skill') {
+					this.writeItext(`<p><b>Attribute:</b> ${item.system.attribute.replace(/^./, char => char.toUpperCase())}</p>\n`);
+			}
+
+			if (item.system.requirements && item.system.requirements.length > 0) {
+				this.writeItext(`<p><b>Requirements:</b> `);
+				let str = '';
+				let combinator = '';
+				for (const r of item.system.requirements) {
+					if (combinator)
+						str += combinator;
+					if (r.combinator == 'and')
+						combinator = ', ';
+					else
+						combinator = ` ${r.combinator} `;
+					switch (r.type) {
+					case 'other':
+						str += r.label;
+						break
+					case 'rank':
+						str += ['Novice', 'Seasoned', 'Veteran', 'Heroic'][r.value];
+						break;
+					case 'attribute':
+						str += r.selector.replace(/^./, char => char.toUpperCase()) + ` d${r.value}+`;
+						break;
+					case 'skill':
+						str += r.label + ` d${r.value}+`;
+						break;
+					case 'power':
+						str += `<em>${r.label}</em>`;
+						break;
+					case 'wildCard':
+						str += (r.value ? '' : 'not ') + "Wild Card";
+						break;
+					default:
+						str += r.label;
+						break;
+					}
+				}
+				this.writeItext(str + `</p>`);
+			}
+
+			this.writeData(item, this.systemFields);
+			if (item.system && item.system.description)
+				this.writeItext(this.ej.doReplacements(item.system.description));
+			if (item.system?.grants?.length > 0) {
+				let grants = [];
+				for (let g of item.system.grants) {
+					if (g.name)
+						grants.push(g.name);
+					else {
+						let uuidParts = g.uuid.split('.');
+						if (uuidParts.length == 5 && uuidParts[0] == 'Compendium') {
+							const pack = game.packs.get(uuidParts[1] + '.' + uuidParts[2]);
+							if (pack) {
+								const item = pack.index.get(uuidParts[4]);
+								if (item)
+									grants.push(item.name);
+							}
+						}
+					}
+				}
+				
+				grants.sort(function(a, b) {
+					return a.localeCompare(b);
+				});
+				
+				this.writeItext(`<p class="itemdata"><b>Grants:</b> `);
+				for (let i = 0; i < grants.length; i++) {
+					if (i > 0)
+						this.writeItext('; ');
+					this.writeItext(this.ej.doReplacements(grants[i]));
+				}
+				this.writeItext(`</p>\n`);
+			}
+			break;
+		}
+
+		return this.itemText;
+	}
+
 	exportItem(item, depth) {
+		this.write(this.getItemText(item, depth));
+		return;
+
 		const header = `h${depth}`;
 		if (item.name)
 			this.write(`<${header} id="${item._id}">` + this.ej.htmlEntities(item.name) + `</${header}>\n`);

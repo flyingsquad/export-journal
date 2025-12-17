@@ -7,7 +7,13 @@ export class ExportSys {
 	constructor(ej) {
 		this.ej = ej;
 	}
+
+	itemText = null;
 	
+	writeItext(txt) {
+		this.itemText += txt;
+	}
+
 	write(txt) {
 		this.ej.write(txt);
 	}
@@ -18,11 +24,17 @@ export class ExportSys {
 		this.ej.write(`<h${depth+1}>${this.ej.doReplacements(hdr)}</h${depth+1}>\n`);
 		this.ej.write(this.ej.doReplacements(txt) + "\n");
 	}
-	
-	exportItem(item, depth) {
+
+	getItemText(item, depth) {
+		this.itemText = "";
 		const header = `h${depth}`;
 		if (item.name)
-			this.write(`<${header} id="${item._id}">` + this.ej.htmlEntities(item.name) + `</${header}>\n`);
+			this.writeItext(`<${header} id="${item._id}">` + this.ej.htmlEntities(item.name) + `</${header}>\n`);
+		return this.itemText;
+	}
+
+	exportItem(item, depth) {
+		return this.getItemText(item, depth);
 	}
 
 	exportActor(actor, depth) {

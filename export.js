@@ -7,7 +7,7 @@ import {ExportDnD5e} from "./exportDnD5e.js";
  
 export class ExportJournal {
 
-	createExporter() {
+	constructor() {
 		switch (game.system.id) {
 		case 'swade':
 			this.sysExporter = new ExportSwade(this);
@@ -92,7 +92,7 @@ export class ExportJournal {
 		return true;
 	}
 	
-	doReplacements(content) {
+	doReplacements(content, depth) {
 		if (!content)
 			return "";
 		if (this.replaceUUIDs) {
@@ -108,6 +108,7 @@ export class ExportJournal {
 				return `<b>${search[3]}</b>`;
 			});	
 			// Handle SWADE @Embed by making a reference to the item.
+			let sysEx = this.sysExporter;
 			content = content.replaceAll(/@Embed+\[([^\]]+)\]/g, function (x) {
 				let search = x.match(/\[(.+)\]/);
 				let ref = search[1].split('.');
@@ -116,9 +117,15 @@ export class ExportJournal {
 				const id = ref[ref.length -1];
 				if (pack) {
 					name = search[1];
-					const item = pack.index.get(id);
-					if (item)
-						name = item.name;
+					if (true) {
+						const item = pack.index.get(id);
+						if (item)
+							name = item.name;
+					} else {
+						const item = pack.getDocument(id);
+						if (item)
+							return sysEx.getItemText(item, depth);
+					}
 				} else
 					name = x;
 				return `<a href="#${id}">${name}</a>`;
@@ -158,7 +165,7 @@ export class ExportJournal {
 			if (content) {
 				if (this.pageDiv)
 					this.write(`<div class="${this.pageDiv}">\n`);
-				this.write(this.doReplacements(content));
+				this.write(await this.doReplacements(content, depth+1));
 				if (this.pageDiv)
 					this.write(`</div>\n`);
 			}
@@ -209,9 +216,6 @@ export class ExportJournal {
 	];
 
 	async writeItem(item, depth) {
-		if (this.sysExporter == null) {
-			this.createExporter();
-		}
 		this.sysExporter.exportItem(item, depth);
 	}
 	
@@ -225,10 +229,6 @@ export class ExportJournal {
 	}
 	
 	async exportActor(actor, depth) {
-		if (this.sysExporter == null) {
-			this.createExporter();
-		}
-		
 		this.sysExporter.exportActor(actor, depth);
 	}
 	
@@ -237,7 +237,7 @@ export class ExportJournal {
 		if (table.name)
 			this.write(`<${header} id="${table._id}">` + this.htmlEntities(table.name) + `</${header}>\n`);
 		if (table.description) {
-			this.write(`<p>` + this.doReplacements(table.description) + "</p>\n");
+			this.write(`<p>` + await this.doReplacements(table.description, depth+1) + "</p>\n");
 		}
 		this.write("<table>\n");
 		for (const entry of table.results) {
@@ -249,7 +249,7 @@ export class ExportJournal {
 			if (entry.description) {
 				this.write("</tr>\n");
 				this.write("<tr>\n");
-				this.write(`<td style="width: 20%"></td><td style="text-align: left;">${this.doReplacements(entry.description)}</td>\n`);
+				this.write(`<td style="width: 20%"></td><td style="text-align: left;">${await this.doReplacements(entry.description, depth+1)}</td>\n`);
 			}
 			this.write("</tr>\n");
 		}
@@ -554,14 +554,6 @@ async function procFolder(ej, folder, depth) {
 		ej.write(`<div class="${ej.bodyDiv}">\n`);
 
 	let sorted = [];
-    for (const f of folder.getSubfolders(false))
-		sorted.push(f);
-	sortArr(folder.sorting, sorted);
-
-	for (const f of sorted)
-        await procFolder(ej, f, depth+1);
-
-	sorted = [];
 
     for (const entry of folder.contents)
 		sorted.push(entry);
@@ -577,6 +569,16 @@ async function procFolder(ej, folder, depth) {
 		else if (entry instanceof RollTable)
 			await ej.exportTable(entry, depth+1);
     }
+
+	sorted = [];
+
+    for (const f of folder.getSubfolders(false))
+		sorted.push(f);
+	sortArr(folder.sorting, sorted);
+
+	for (const f of sorted)
+        await procFolder(ej, f, depth+1);
+
 	if (depth == 1 && ej.bodyDiv)
 		ej.write(`</div>\n`);
 	
@@ -602,6 +604,12 @@ Hooks.on('getFolderContextOptions', (app, options) => {
 				try {
 					await ej.init(folder.name);
 					if (folder.type == 'Compendium') {
+						//await procFolder(ej, folder, 2);
+						for (const f of folder.children) {
+							for (const e of f.entries)
+								await ej.exportCompendium(e);
+						}
+
 						let packArr = [];
 						for (const pack of game.packs.filter(pack => pack.folder === folder))
 							packArr.push(pack);
@@ -616,12 +624,6 @@ Hooks.on('getFolderContextOptions', (app, options) => {
 						}
 						for (let i = 0; i < packArr.length; i++)
 							await ej.exportCompendium(packArr[i]);
-						// FIX: it's not processing child folders of this folder.
-						//await procFolder(ej, folder, 2);
-						for (const f of folder.children) {
-							for (const e of f.entries)
-								await ej.exportCompendium(e);
-						}
 					} else {
 						await procFolder(ej, folder, 1);
 					}

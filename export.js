@@ -161,13 +161,21 @@ export class ExportJournal {
 				if (this.titleDiv)
 					this.write(`</div>\n`);
 			}
-			let content = page.text.content;
-			if (content) {
-				if (this.pageDiv)
-					this.write(`<div class="${this.pageDiv}">\n`);
-				this.write(await this.doReplacements(content, depth+1));
-				if (this.pageDiv)
-					this.write(`</div>\n`);
+			if (page.type == 'image') {
+				this.write(`<img src="${page.src}">\n`);
+				if (page.image.caption)
+					this.write(`<p class="caption">${page.image.caption}</p>\n`);
+			} else if (page.type == 'text') {
+				let content = page.text.content;
+				if (content) {
+					if (this.pageDiv)
+						this.write(`<div class="${this.pageDiv}">\n`);
+					this.write(await this.doReplacements(content, depth+1));
+					if (this.pageDiv)
+						this.write(`</div>\n`);
+				}
+			} else if (page.type == 'pdf') {
+				this.write(`<p><a href="${page.src}">${page.src}</a></p>\n`);
 			}
 		}
 

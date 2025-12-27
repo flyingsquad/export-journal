@@ -74,7 +74,6 @@ export class ExportSwade extends ExportSys {
 						str += ' (' + data.replaceAll('@str', strength) + ')';
 					}
 				}
-				break;
 			}
 			ej.write(`<p class="attributes"><b>${category}:</b> ` + str + `</p>\n`);
 		}

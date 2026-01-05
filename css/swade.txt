@@ -125,3 +125,10 @@ li {
 	padding-left: 0;
 }
 
+img {
+  align: center;
+}
+
+.itemdata {
+	margin: 0;
+}

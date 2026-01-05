@@ -7,12 +7,20 @@ export class ExportSwade extends ExportSys {
 	}
 
 	writeData(item, arr) {
+		let str = "";
 		for (let  i = 0; i < arr.length; i++) {
 			const elt = arr[i];
 			if (item.system && item.system[elt[0]]) {
-				this.writeItext(`<p class="itemdata">${elt[1]}: ${item.system[elt[0]]}</p>\n`);
+				if (str)
+					str += ', ';
+				let s = item.system[elt[0]];
+				if (typeof s == 'string')
+					s = s.replace('@str', 'Str');
+				str += `<b>${elt[1]}:</b> ${s}`;
 			}
 		}
+		if (str)
+			this.writeItext(`<p class="itemdata">${str}</p>\n`);
 	}
 
 	systemFields = [
@@ -100,6 +108,7 @@ export class ExportSwade extends ExportSys {
 					break;
 				}
 			} else if (item.type == 'skill') {
+				if (item.system.attribute)
 					this.writeItext(`<p><b>Attribute:</b> ${item.system.attribute.replace(/^./, char => char.toUpperCase())}</p>\n`);
 			}
 
@@ -205,7 +214,7 @@ export class ExportSwade extends ExportSys {
 			
 		this.write(`<h${depth} id="${actor._id}">${headerInfoBefore}` + this.ej.htmlEntities(actor.name) + `${headerInfoAfter}</h${depth}>\n`);
 		if (actor.img)
-			this.write(`<p><img class="img" src="${actor.img}" alt="${actor.name}"></p>\n`);
+			this.write(`<p><img class="img charportrait" src="${actor.img}" alt="${actor.name}"></p>\n`);
 
 		if (actor.system.details) {
 			this.subsection('Appearance', actor.system.details.appearance, depth+1);
@@ -215,6 +224,7 @@ export class ExportSwade extends ExportSys {
 			this.subsection('Notes', actor.system.details.notes, depth+1);
 		}
 		if (actor.type == 'npc' || actor.type == 'character') {
+			this.write(`<p class="attributes"><b>Rank:</b> ${actor.system.advances.rank}</p>`);
 			this.listItems(this.ej, actor, 'ancestry', 'Ancestry');
 			this.write(`<p class="attributes"><b>Attributes:</b> Agility ${this.showDie(actor.system.attributes.agility.die)}, Smarts ${this.showDie(actor.system.attributes.smarts.die)}, Spirit ${this.showDie(actor.system.attributes.spirit.die)}, Strength ${this.showDie(actor.system.attributes.strength.die)}, Vigor ${this.showDie(actor.system.attributes.vigor.die)}</p>\n`);
 			this.listItems(this.ej, actor, 'skill', 'Skills');
@@ -242,6 +252,20 @@ export class ExportSwade extends ExportSys {
 			this.listItems(this.ej, actor, 'armor', 'Armor');
 			this.listItems(this.ej, actor, 'shield', 'Shield');
 			this.listItems(this.ej, actor, 'consumable', 'Consumables');
+			if (actor.system.advances?.list?.size > 0) {
+				this.write(`<h${depth+1}>Advances</h${depth+1}>`);
+				
+				let advances = [];
+				for (const advance of actor.system.advances.list)
+					advances.push(advance);
+				const types = ['New Edge', 'Raise one skill', 'Raise two skills', 'Raise Attribute', 'Decrease Hindrance'];
+				advances.sort(function(a, b) {return a.sort - b.sort});
+				this.write(`<table>\n`);
+				for (const a of advances) {
+					this.write(`<tr><td width="30%"><p>${types[a.type]}${a.planned?' (planned)':''}</p></td><td>${a.notes}</td></tr>\n`);
+				}
+				this.write(`</table>\n`);
+			}
 		} else if (actor.type === 'group') {
 			if (actor.system.description)
 				this.subsection('Description', actor.system.description, depth+1);

@@ -221,7 +221,8 @@ export class ExportSwade extends ExportSys {
 			if (actor.system.details.biography)
 				this.subsection('Biography', actor.system.details?.biography.value, depth+1);
 			this.subsection('Goals', actor.system.details.goals, depth+1);
-			this.subsection('Notes', actor.system.details.notes, depth+1);
+			if (!this.ej.hideSecrets)
+				this.subsection('Notes', actor.system.details.notes, depth+1);
 		}
 		if (actor.type == 'npc' || actor.type == 'character') {
 			this.write(`<p class="attributes"><b>Rank:</b> ${actor.system.advances.rank}</p>`);

@@ -46,6 +46,7 @@ export class ExportJournal {
 	titleDiv = '';
 	pageDiv = '';
 	tab = null;
+	hideSecrets = game.settings.get('export-journal', 'hidesecrets');
 	
 	sysExporter = null;
 
@@ -454,6 +455,14 @@ Hooks.once('init', async function () {
 	  config: true,       // false if you dont want it to show in module config
 	  type: Boolean,       // Number, Boolean, String, Object
 	  default: true
+	});
+	game.settings.register('export-journal', 'hidesecrets', {
+	  name: 'Hide Secrets',
+	  hint: "If checked, information that only the GM should see will be redacted.",
+	  scope: 'client',     // "world" = sync to db, "client" = local storage
+	  config: true,       // false if you dont want it to show in module config
+	  type: Boolean,       // Number, Boolean, String, Object
+	  default: false
 	});
 
 });

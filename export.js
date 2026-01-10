@@ -288,6 +288,9 @@ export class ExportJournal {
 	}
 	
 	async exportCompendium(pack) {
+		if (this.hideSecrets && pack.ownership.PLAYER == 'NONE')
+			return;
+
 		let isJournal = pack.metadata.type == "JournalEntry";
 		switch (pack.metadata.type) {
 		case 'Macro':
@@ -665,6 +668,9 @@ Hooks.on('getCompendiumContextOptions', (app, options) => {
             const pack = game.packs.get(li.dataset.pack);
             if (pack) {
 				let ej = new ExportJournal();
+				if (ej.hideSecrets)
+					if (pack.ownership.PLAYER == 'NONE')
+						return;
 				try {
 					await ej.init(pack.title);
 					await ej.exportCompendium(pack);

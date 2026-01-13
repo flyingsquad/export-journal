@@ -14,6 +14,6 @@
   "esmodules": ["export.js"],
   "url": "https://github.com/flyingsquad/export-journal",
   "manifest": "https://raw.githubusercontent.com/flyingsquad/export-journal/main/module.json",
-  "version": "1.1.0",
-  "download": "https://github.com/flyingsquad/export-journal/archive/refs/tags/v1.1.0.zip"
+  "version": "1.1.1",
+  "download": "https://github.com/flyingsquad/export-journal/archive/refs/tags/v1.1.1.zip"
 }

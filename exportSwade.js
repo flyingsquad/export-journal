@@ -24,6 +24,7 @@ export class ExportSwade extends ExportSys {
 	}
 
 	systemFields = [
+		['trapping', 'Trappings'],
 		['price', 'Price'],
 		['armor', 'Armor'],
 		['damage', 'Damage'],
@@ -53,7 +54,10 @@ export class ExportSwade extends ExportSys {
 				let it = items[i];
 				if (str)
 					str += '; ';
-				str += ej.htmlEntities(it.name);
+				if (type == 'power')
+					str += "<b>" + ej.htmlEntities(it.name) + "</b>";
+				else
+					str += ej.htmlEntities(it.name);
 				if (it.system.quantity && it.system.quantity > 1) {
 					str += ` (x${it.system.quantity})`;
 				}
@@ -71,11 +75,6 @@ export class ExportSwade extends ExportSys {
 								data += '; ';
 							data += `${elt[1]}: ${it.system[elt[0]]}`;
 						}
-					}
-					if (type == 'power' && it.system.trapping) {
-						if (data)
-							data += '; ';
-						data += 'Trappings: ' + ej.htmlEntities(it.system.trapping);
 					}
 					if (data) {
 						const strength = this.showDie(actor.system.attributes.strength.die);

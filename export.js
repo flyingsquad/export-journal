@@ -40,6 +40,7 @@ export class ExportJournal {
 	footer = '';
 	cssSection = '';
 	pages = "";
+	showDetails = game.settings.get('export-journal', 'details');
 	replaceUUIDs = game.settings.get('export-journal', 'replaceUUIDs');
 	saveHTML = game.settings.get('export-journal', 'savehtml');
 	bodyDiv = '';
@@ -450,6 +451,14 @@ Hooks.once('init', async function () {
 	  config: true,       // false if you dont want it to show in module config
 	  type: Boolean,       // Number, Boolean, String, Object
 	  default: true
+	});
+	game.settings.register('export-journal', 'details', {
+	  name: 'Show Actor Details',
+	  hint: 'Show complete descriptions of items on actors.',
+	  scope: 'client',     // "world" = sync to db, "client" = local storage
+	  config: true,       // false if you dont want it to show in module config
+	  type: Boolean,       // Number, Boolean, String, Object
+	  default: false
 	});
 	game.settings.register('export-journal', 'savehtml', {
 	  name: 'Save as HTML file',

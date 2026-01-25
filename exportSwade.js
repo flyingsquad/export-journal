@@ -284,7 +284,7 @@ export class ExportSwade extends ExportSys {
 				this.write(`<h${depth+1}>Members</h${depth+1}>\n`);
 				this.write('<ul>\n');
 				for (let [key, m] of actor.system.members) {
-					this.write(`<li>${this.doReplacements(m.actor.name)}</li>\n`);
+					this.write(`<li>${this.ej.doReplacements(m.actor.name)}</li>\n`);
 				}
 				this.write('</ul>\n');
 			}

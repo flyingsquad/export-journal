@@ -271,9 +271,14 @@ export class ExportSwade extends ExportSys {
 					advances.push(advance);
 				const types = ['New Edge', 'Raise one skill', 'Raise two skills', 'Raise Attribute', 'Decrease Hindrance'];
 				advances.sort(function(a, b) {return a.sort - b.sort});
+				const ranks = ['Novice', 'Seasoned', 'Veteran', 'Heroic', 'Legendary'];
 				this.write(`<table>\n`);
+				this.write(`<tr><td><b>Novice</b></td></tr>\n`);
 				for (const a of advances) {
-					this.write(`<tr><td width="30%"><p>${types[a.type]}${a.planned?' (planned)':''}</p></td><td>${a.notes}</td></tr>\n`);
+					const r = a.sort / 4;
+					if (r == Math.floor(r) && r < ranks.length)
+						this.write(`<tr><td><b>${ranks[r]}</b></td></tr>\n`);
+					this.write(`<tr><td width="10%">${a.sort}</td><td width="30%">${types[a.type]}${a.planned?' (planned)':''}</td><td>${a.notes}</td></tr>\n`);
 				}
 				this.write(`</table>\n`);
 			}

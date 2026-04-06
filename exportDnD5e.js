@@ -15,10 +15,29 @@ export class ExportDnD5e extends ExportSys {
 		
 	}
 
+	listItems(actor, header, types) {
+		let string = '';
+		let items = actor.items.contents.filter(i => {
+			const result = types.includes(i.type);
+			return result;
+		});
+		for (const i of items) {
+			if (string)
+				string += ', ';
+			string += i.name;
+		}
+		if (string)
+			this.write(`<p><b>${header}</b> ${string}</p>\n`);
+	}
+
 	exportActor(actor, depth) {
+		function firstUpper(str) {
+			return `${str[0].toUpperCase()}${str.slice(1)}`
+		}
 		function showAbil(ex, abil) {
 			return `${abil.value} (${abil.mod})`;
 		}
+
 		this.write(`<h${depth} id="${actor._id}">${this.ej.htmlEntities(actor.name)}</h${depth}>\n`);
 		if (actor.img)
 			this.write(`<p><img class="img" src="${actor.img}" alt="${actor.name}"></p>\n`);
@@ -54,6 +73,47 @@ export class ExportDnD5e extends ExportSys {
         </tr>
     </tbody>
 </table>`);
+			let skills = '';
+			for (const skill in actor.system.skills) {
+				const s = actor.system.skills[skill];
+				if (s.value == 0)
+					continue;
+				if (skills)
+					skills += ', ';
+				const fullName = game.i18n.localize(`DND5E.Skill${firstUpper(skill)}`);
+				skills += `${fullName}: ${s.value > 0 ? '+' : ''}${s.value}`;
+			}
+			if (skills)
+				this.write(`<p><b>Skills:</b> ${skills}</p>\n`);
+			let tools = '';
+			for (const tool in actor.system.tools) {
+				const t = actor.system.tools[tool];
+				if (t.value == 0)
+					continue;
+				if (tools)
+					tools += ', ';
+				let key = `DND5E.Tool${firstUpper(tool)}}`;
+				let fullName = game.i18n.localize(key);
+				if (key == fullName)
+					fullName = firstUpper(tool);
+				tools += `${fullName}: ${t.value > 0 ? '+' : ''}${t.value}`;
+			}
+			if (tools)
+				this.write(`<p><b>Tools:</b> ${tools}</p>\n`);
+
+			this.listItems(actor, 'Race', ['race']);
+			this.listItems(actor, 'Background', ['background']);
+			this.listItems(actor, 'Classes & Subclasses', ['class', 'subclass']);
+			this.listItems(actor, 'Feats', ['feat']);
+			this.listItems(actor, 'Spells', ['spell']);
+			this.listItems(actor, 'Weapons', ['weapon']);
+			this.listItems(actor, 'Tools', ['tool']);
+			this.listItems(actor, 'Armor & Shield', ['armor', 'shield']);
+			this.listItems(actor, 'Equipment', ['equipment']);
+			this.listItems(actor, 'Loot', ['loot']);
+			this.listItems(actor, 'Consumables', ['consumable']);
+			this.listItems(actor, 'Containers', ['container']);
+			
 		}
 	}
 	

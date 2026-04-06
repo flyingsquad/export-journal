@@ -12,12 +12,12 @@
 
 @font-face {
   font-family: 'Copperplate Gothic Bold';
-  src: url('/modules/loeg-supplement/fonts/COPRGTB.TTF') format('truetype');
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/COPRGTB.TTF') format('truetype');
 }
 
 @font-face {
   font-family: 'Copperplate Gothic Light';
-  src: url('/modules/loeg-supplement/fonts/COPRGTL.TTF') format('truetype');
+  src: url('https://blk-aws.s3.amazonaws.com/fonts/COPRGTL.TTF') format('truetype');
 }
 
 @font-face {

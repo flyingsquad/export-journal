@@ -35,12 +35,31 @@ export class ExportJournal {
 	htmlEntities(str) {
 		return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 	}
+	
+	getPrintFlags() {
+		const settings = game.settings.get('export-journal', 'printFlags');
+		if (!settings)
+			return [];
+		let flags = settings.split(/ *; */);
+		let printFlags = [];
+		for (let entry of flags) {
+			try {
+				const [type, flag] = entry.split(/ *: */);
+				const [module, f] = flag.split('.');
+				printFlags.push({type: type, module: module, flag: f});
+			} catch(e) {
+				ui.notifications.error(`Error in print flag setting for Export to HTML: ${e}`);
+			}
+		}
+		return printFlags;
+	}
 
 	header = '';
 	footer = '';
 	cssSection = '';
 	pages = "";
 	showDetails = game.settings.get('export-journal', 'details');
+	typeDetails = game.settings.get('export-journal', 'typeDetails').split(/ *, */);
 	replaceUUIDs = game.settings.get('export-journal', 'replaceUUIDs');
 	saveHTML = game.settings.get('export-journal', 'savehtml');
 	bodyDiv = '';
@@ -48,6 +67,7 @@ export class ExportJournal {
 	pageDiv = '';
 	tab = null;
 	hideSecrets = game.settings.get('export-journal', 'hidesecrets');
+	printFlags = this.getPrintFlags();
 	
 	sysExporter = null;
 
@@ -438,7 +458,7 @@ Hooks.once('init', async function () {
 	game.settings.register('export-journal', 'css', {
 	  name: 'CSS file',
 	  hint: 'Name of CSS file. Must be placed in data/modules/export-journal/css folder.',
-	  scope: 'client',     // "world" = sync to db, "client" = local storage
+	  scope: 'world',     // "world" = sync to db, "client" = local storage
 	  config: true,       // false if you dont want it to show in module config
 	  type: String,       // Number, Boolean, String, Object
 	  default: defFilter,
@@ -447,7 +467,7 @@ Hooks.once('init', async function () {
 	game.settings.register('export-journal', 'replaceUUIDs', {
 	  name: 'Replace UUIDs',
 	  hint: 'Replace UUIDs with the text inside the braces: @UUID[...]{...}.',
-	  scope: 'client',     // "world" = sync to db, "client" = local storage
+	  scope: 'world',     // "world" = sync to db, "client" = local storage
 	  config: true,       // false if you dont want it to show in module config
 	  type: Boolean,       // Number, Boolean, String, Object
 	  default: true
@@ -455,15 +475,31 @@ Hooks.once('init', async function () {
 	game.settings.register('export-journal', 'details', {
 	  name: 'Show Actor Details',
 	  hint: 'Show complete descriptions of items on actors.',
-	  scope: 'client',     // "world" = sync to db, "client" = local storage
+	  scope: 'world',     // "world" = sync to db, "client" = local storage
 	  config: true,       // false if you dont want it to show in module config
 	  type: Boolean,       // Number, Boolean, String, Object
 	  default: false
 	});
+	game.settings.register('export-journal', 'typeDetails', {
+	  name: 'Item Type Details',
+	  hint: 'Show complete details of items of listed types on actors (comma-delimited).',
+	  scope: 'world',     // "world" = sync to db, "client" = local storage
+	  config: true,       // false if you dont want it to show in module config
+	  type: String,       // Number, Boolean, String, Object
+	  default: ""
+	});
+	game.settings.register('export-journal', 'printFlags', {
+	  name: 'Flags to print',
+	  hint: 'Format: "type: module.flag", where type is skill, power, etc., or actor',
+	  scope: 'world',     // "world" = sync to db, "client" = local storage
+	  config: true,       // false if you dont want it to show in module config
+	  type: String,       // Number, Boolean, String, Object
+	  default: ""
+	});
 	game.settings.register('export-journal', 'savehtml', {
 	  name: 'Save as HTML file',
 	  hint: "If checked, the output is saved as an HTML file. Otherwise it is written to a new browser tab. A tab can display images stored in the Foundry file system, where an HTML file will show a missing link icon.",
-	  scope: 'client',     // "world" = sync to db, "client" = local storage
+	  scope: 'world',     // "world" = sync to db, "client" = local storage
 	  config: true,       // false if you dont want it to show in module config
 	  type: Boolean,       // Number, Boolean, String, Object
 	  default: true
@@ -471,7 +507,7 @@ Hooks.once('init', async function () {
 	game.settings.register('export-journal', 'hidesecrets', {
 	  name: 'Hide Secrets',
 	  hint: "If checked, information that only the GM should see will be redacted.",
-	  scope: 'client',     // "world" = sync to db, "client" = local storage
+	  scope: 'world',     // "world" = sync to db, "client" = local storage
 	  config: true,       // false if you dont want it to show in module config
 	  type: Boolean,       // Number, Boolean, String, Object
 	  default: false

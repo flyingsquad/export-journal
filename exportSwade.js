@@ -52,7 +52,7 @@ export class ExportSwade extends ExportSys {
 			return a.name.localeCompare(b.name);
 		});
 		
-		if (this.ej.showDetails) {
+		if (this.ej.showDetails || this.ej.typeDetails.includes(type)) {
 			ej.write(`<h${depth}>${category}</h${depth}>\n`);
 			
 			for (let i = 0; i < items.length; i++) {
@@ -88,6 +88,11 @@ export class ExportSwade extends ExportSys {
 						data += `${elt[1]}: ${it.system[elt[0]]}`;
 					}
 				}
+				const flags = this.getPrintFlags(it);
+				if (flags) {
+					if (data) data += '; ';
+					data += flags;
+				}
 				if (data) {
 					const strength = this.showDie(actor.system.attributes.strength.die);
 					str += ' (' + data.replaceAll('@str', strength) + ')';
@@ -95,6 +100,22 @@ export class ExportSwade extends ExportSys {
 			}
 		}
 		ej.write(`<p class="attributes"><b>${category}:</b> ` + str + `</p>\n`);
+	}
+	
+	getPrintFlags(item) {
+		let str = '';
+		for (const pf of this.ej.printFlags) {
+			if (pf.type == item.type) {
+				let value = item.getFlag(pf.module, pf.flag);
+				if (value != undefined) {
+					value = value.replace(/(<([^>]+)>)/g, '')
+					if (str)
+						str += '; ';
+					str += `${pf.flag}: ${value}`;
+				}
+			}
+		}
+		return str;
 	}
 
 	getItemText(item, depth) {
@@ -121,7 +142,11 @@ export class ExportSwade extends ExportSys {
 				if (item.system.attribute)
 					this.writeItext(`<p><b>Attribute:</b> ${item.system.attribute.replace(/^./, char => char.toUpperCase())}</p>\n`);
 			}
-
+			const flags = this.getPrintFlags(item);
+			if (flags) {
+				this.writeItext(`<p>${flags}</p>\n`);
+			}
+			
 			if (item.system.requirements && item.system.requirements.length > 0) {
 				this.writeItext(`<p><b>Requirements:</b> `);
 				let str = '';
@@ -293,6 +318,23 @@ export class ExportSwade extends ExportSys {
 				}
 				this.write('</ul>\n');
 			}
+		} else if (actor.type === 'vehicle') {
+			if (actor.system.description)
+				this.subsection('Description', actor.system.description, depth+1);
+			let stats = '<p class="attributes"><b>Top Speed:</b> ';
+			stats += actor.system.topspeed.value + actor.system.topspeed.unit;
+			stats += `; <b>Toughness:</b> ${actor.system.toughness.total}`;
+			if (actor.system.toughness.armor)
+				stats += ` (${actor.system.toughness.armor})`;
+			stats += `; <b>Size:</b> ${actor.system.size}`;
+			stats += "</p>\n";
+			this.write(stats);
+			this.listItems(this.ej, actor, 'edge', 'Edges', depth+1);
+			this.listItems(this.ej, actor, 'hindrance', 'Hindrances', depth+1);
+			this.listItems(this.ej, actor, 'ability', 'Special Abilities', depth+1);
+			this.listItems(this.ej, actor, 'power', 'Powers', depth+1);
+			this.listItems(this.ej, actor, 'weapon', 'Weapons', depth+1);
+			this.listItems(this.ej, actor, 'gear', 'Gear', depth+1);
 		}
 	}
 }

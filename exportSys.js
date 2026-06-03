@@ -18,14 +18,14 @@ export class ExportSys {
 		this.ej.write(txt);
 	}
 
-	subsection(hdr, txt, depth) {
+	async subsection(hdr, txt, depth) {
 		if (!txt)
 			return;
-		this.ej.write(`<h${depth+1}>${this.ej.doReplacements(hdr)}</h${depth+1}>\n`);
-		this.ej.write(this.ej.doReplacements(txt) + "\n");
+		this.ej.write(`<h${depth+1}>${await this.ej.doReplacements(hdr)}</h${depth+1}>\n`);
+		this.ej.write(await this.ej.doReplacements(txt) + "\n");
 	}
 
-	getItemText(item, depth) {
+	async getItemText(item, depth) {
 		this.itemText = "";
 		const header = `h${depth}`;
 		if (item.name)
@@ -33,11 +33,11 @@ export class ExportSys {
 		return this.itemText;
 	}
 
-	exportItem(item, depth) {
-		return this.getItemText(item, depth);
+	async exportItem(item, depth) {
+		return await this.getItemText(item, depth);
 	}
 
-	exportActor(actor, depth) {
+	async exportActor(actor, depth) {
 		this.write(`<h${depth} id="${actor._id}">${this.ej.htmlEntities(actor.name)}</h${depth}>\n`);
 	}
 

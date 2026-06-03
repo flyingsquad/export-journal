@@ -114,7 +114,7 @@ export class ExportJournal {
 		return true;
 	}
 	
-	doReplacements(content, depth) {
+	async doReplacements(content, depth) {
 		if (!content)
 			return "";
 		if (this.replaceUUIDs) {
@@ -128,30 +128,72 @@ export class ExportJournal {
 					return `<a href="#${search[2]}">${search[3]}</a>`;
 				}
 				return `<b>${search[3]}</b>`;
-			});	
+			});
+			
+			// Handle SWADE @Embed by making a reference to the item.
+			let index = content.search(/@Embed\[/);
+			if (index >= 0) {
+				let sysEx = this.sysExporter;
+				let resultString = content.substring(0, index);
+				let source = content.substring(index);
+
+				for (;;) {
+					let m = source.match(/@Embed+\[([^\]]+)\]/);
+					if (!m) {
+						content = resultString + source;
+						break;
+					}
+					source = source.substring(m[0].length);
+
+					let uuid = m[1];
+					uuid.trim();
+					let parts = uuid.split(/ +/);
+					if (parts.length > 1)
+						uuid = parts[0];
+					const item = await fromUuid(uuid);
+					if (item) {
+						if (item instanceof foundry.documents.Item) {
+							resultString += await sysEx.getItemText(item, depth);
+						} else if (item instanceof foundry.documents.Actor) {
+							let saveOutput = this.pages;
+							try {
+								this.pages = "";
+								await this.exportActor(item, depth);
+								resultString += this.pages;
+							} catch (e) {
+								ui.notifications.error(`Error in doReplacements: ${e}`);
+							}
+							
+							this.pages = saveOutput;
+						} else {
+							resultString += `<p>${uuid}</p>`;
+						}
+					} else
+						resultString += `<p>${uuid}</p>`;
+
+					index = source.search(/@Embed\[/);
+					if (index >= 0) {
+						resultString = source.substring(0, index);
+						source = source.substring(index);
+					} else {
+						content = resultString + source;
+						break;
+					}
+				}
+			}
+			/*
 			// Handle SWADE @Embed by making a reference to the item.
 			let sysEx = this.sysExporter;
-			content = content.replaceAll(/@Embed+\[([^\]]+)\]/g, function (x) {
-				let search = x.match(/\[(.+)\]/);
-				let ref = search[1].split('.');
-				const pack = game.packs.get(ref[1] + '.' + ref[2]);
-				let name;
-				const id = ref[ref.length -1];
-				if (pack) {
-					name = search[1];
-					if (true) {
-						const item = pack.index.get(id);
-						if (item)
-							name = item.name;
-					} else {
-						const item = pack.getDocument(id);
-						if (item)
-							return sysEx.getItemText(item, depth);
-					}
-				} else
-					name = x;
-				return `<a href="#${id}">${name}</a>`;
-			});			
+			content = content.replaceAll(/@Embed+\[([^\]]+)\]/g, async function (x) {
+				let search = x.match(/@Embed\[([^\]]+)\]/);
+				const item = await fromUuid(search[1]);
+				if (item) {
+					return await sysEx.getItemText(item, depth);
+				} else {
+					return x;
+				}
+			});		
+			*/			
 		}
 		return content;
 	}
@@ -246,7 +288,7 @@ export class ExportJournal {
 	];
 
 	async writeItem(item, depth) {
-		this.sysExporter.exportItem(item, depth);
+		await this.sysExporter.exportItem(item, depth);
 	}
 	
 	async exportIt(journal) {
@@ -259,7 +301,7 @@ export class ExportJournal {
 	}
 	
 	async exportActor(actor, depth) {
-		this.sysExporter.exportActor(actor, depth);
+		await this.sysExporter.exportActor(actor, depth);
 	}
 	
 	async exportTable(table, depth) {

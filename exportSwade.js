@@ -97,6 +97,20 @@ export class ExportSwade extends ExportSys {
 					const strength = this.showDie(actor.system.attributes.strength.die);
 					str += ' (' + data.replaceAll('@str', strength) + ')';
 				}
+				break;
+			case 'hindrance':
+				switch (it.system.severity) {
+				case 'major':
+					str += ' (Major)';
+					break;
+				case 'minor':
+					str += ' (Minor)';
+					break;
+				case 'either':
+					str += it.system.major ? ' (Major)' : ' (Minor)';
+					break;
+				}
+				break;
 			}
 		}
 		ej.write(`<p class="attributes"><b>${category}:</b> ` + str + `</p>\n`);
@@ -118,7 +132,7 @@ export class ExportSwade extends ExportSys {
 		return str;
 	}
 
-	getItemText(item, depth) {
+	async getItemText(item, depth) {
 		this.itemText = "";
 		const header = `h${depth}`;
 		if (item.name)
@@ -187,7 +201,7 @@ export class ExportSwade extends ExportSys {
 
 			this.writeData(item, this.systemFields);
 			if (item.system && item.system.description)
-				this.writeItext(this.ej.doReplacements(item.system.description));
+				this.writeItext(await this.ej.doReplacements(item.system.description));
 			if (item.system?.grants?.length > 0) {
 				let grants = [];
 				for (let g of item.system.grants) {
@@ -214,7 +228,7 @@ export class ExportSwade extends ExportSys {
 				for (let i = 0; i < grants.length; i++) {
 					if (i > 0)
 						this.writeItext('; ');
-					this.writeItext(this.ej.doReplacements(grants[i]));
+					this.writeItext(await this.ej.doReplacements(grants[i]));
 				}
 				this.writeItext(`</p>\n`);
 			}
@@ -224,8 +238,8 @@ export class ExportSwade extends ExportSys {
 		return this.itemText;
 	}
 
-	exportItem(item, depth) {
-		this.write(this.getItemText(item, depth));
+	async exportItem(item, depth) {
+		this.write(await this.getItemText(item, depth));
 	}
 
 	showDie(die) {
@@ -238,7 +252,7 @@ export class ExportSwade extends ExportSys {
 	}
 
 	
-	exportActor(actor, depth) {
+	async exportActor(actor, depth) {
 		// This provides a method for putting system-dependent information
 		// in the actor name header.
 
@@ -252,12 +266,12 @@ export class ExportSwade extends ExportSys {
 			this.write(`<p><img class="img charportrait" src="${actor.img}" alt="${actor.name}"></p>\n`);
 
 		if (actor.system.details) {
-			this.subsection('Appearance', actor.system.details.appearance, depth+1);
+			await this.subsection('Appearance', actor.system.details.appearance, depth+1);
 			if (actor.system.details.biography)
-				this.subsection('Biography', actor.system.details?.biography.value, depth+1);
+				await this.subsection('Biography', actor.system.details?.biography.value, depth+1);
 			this.subsection('Goals', actor.system.details.goals, depth+1);
 			if (!this.ej.hideSecrets)
-				this.subsection('Notes', actor.system.details.notes, depth+1);
+				await this.subsection('Notes', actor.system.details.notes, depth+1);
 		}
 		if (actor.type == 'npc' || actor.type == 'character') {
 			this.write(`<p class="attributes"><b>Rank:</b> ${actor.system.advances.rank}</p>`);
@@ -314,7 +328,7 @@ export class ExportSwade extends ExportSys {
 				this.write(`<h${depth+1}>Members</h${depth+1}>\n`);
 				this.write('<ul>\n');
 				for (let [key, m] of actor.system.members) {
-					this.write(`<li>${this.ej.doReplacements(m.actor.name)}</li>\n`);
+					this.write(`<li>${await this.ej.doReplacements(m.actor.name)}</li>\n`);
 				}
 				this.write('</ul>\n');
 			}

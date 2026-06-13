@@ -60,6 +60,20 @@ export class ExportSwade extends ExportSys {
 			}
 			return;
 		}
+		
+		if (type == 'power') {
+			let str = '';
+			for (const pp in actor.system.powerPoints) {
+				if (str)
+					str += ', ';
+				if (pp == 'general')
+					str += actor.system.powerPoints[pp].max;
+				else
+					str += `${pp}: ${actor.system.powerPoints[pp].max}`;
+			}
+			if (str)
+				ej.write(`<p class="attributes"><b>Power Points:</b> ` + str + `</p>\n`);
+		}
 
 		let str = '';
 		for (let i = 0; i < items.length; i++) {
